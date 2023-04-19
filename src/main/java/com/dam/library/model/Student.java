@@ -12,8 +12,17 @@ public class Student {
     private String name;
     @Column(nullable = false)
     private String password;
-    @OneToMany(mappedBy = "students")
-    private List<Book> books;
+
+    @OneToMany(mappedBy = "student")
+    private List<StudentBook> studentBooks = new ArrayList<>();
+
+    public List<StudentBook> getStudentBooks() {
+        return studentBooks;
+    }
+
+    public void setStudentBooks(List<StudentBook> studentBooks) {
+        this.studentBooks = studentBooks;
+    }
 
     Student(){}
 
@@ -23,18 +32,6 @@ public class Student {
         this.password = password;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void addBooks(Book book) {
-        this.books.add(book);
-        book.getStudents().add(this);
-    }
 
     public int getRoll() {
         return roll;

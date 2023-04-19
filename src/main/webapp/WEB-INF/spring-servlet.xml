@@ -58,6 +58,7 @@
             <list>
                 <value>com.dam.library.model.Book</value>
                 <value>com.dam.library.model.Student</value>
+                <value>com.dam.library.model.StudentBook</value>
             </list>
         </property>
 

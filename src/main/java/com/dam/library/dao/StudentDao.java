@@ -2,10 +2,12 @@ package com.dam.library.dao;
 
 import com.dam.library.model.Book;
 import com.dam.library.model.Student;
+import com.dam.library.model.StudentBook;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,7 +26,7 @@ public class StudentDao {
         System.out.println("Student saved successfully");
     }
 
-    public int issueBook(int studentId, int bookId){
+    public int issueBook(int studentId, int bookId, Date date){
         Session session = this.sessionFactory.getCurrentSession();
         Student student = session.get(Student.class, studentId);
         Book book = session.get(Book.class, bookId);
@@ -32,16 +34,32 @@ public class StudentDao {
         if(book.getStock() <= 0){
             return 1;
         }
-        student.addBooks(book);
         book.setStock(book.getStock()-1);
+        StudentBook sb = new StudentBook(student, book, date);
+        student.getStudentBooks().add(sb);
+        book.getStudentBooks().add(sb);
+        session.save(sb);
         System.out.println("Book added successfully");
         return 0;
     }
 
-    public int returnBook(int studentId, int bookId){
+    public int returnBook(int studentId, int bookId, Date date){
         Session session = this.sessionFactory.getCurrentSession();
         Student student = session.get(Student.class, studentId);
-        Book book = session.get(Book.class, bookId);
+        List<StudentBook> studentBooks = student.getStudentBooks();
+        StudentBook studentBook = null;
+        for(StudentBook sb : studentBooks){
+            if(sb.getBook().getId() == bookId && sb.getReturn_date() == null){
+                studentBook = sb;
+                break;
+            }
+        }
+        if(studentBook == null){
+            return 1;
+        }
+        studentBook.getBook().setStock(studentBook.getBook().getStock() + 1);
+        studentBook.setReturn_date(date);
+
         return 0;
     }
 

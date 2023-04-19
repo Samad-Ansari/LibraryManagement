@@ -1,6 +1,7 @@
 package com.dam.library.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,16 +15,15 @@ public class Book {
     private int price;
     private int stock;
 
-    @ManyToMany
-    @JoinTable(name = "students_books", joinColumns = @JoinColumn( name = "s_id"), inverseJoinColumns = @JoinColumn( name = "b_id"))
-    private List<Student> students;
+    @OneToMany( mappedBy = "book")
+    private List<StudentBook> studentBooks = new ArrayList<>();
 
-    public List<Student> getStudents() {
-        return students;
+    public List<StudentBook> getStudentBooks() {
+        return studentBooks;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setStudentBooks(List<StudentBook> studentBooks) {
+        this.studentBooks = studentBooks;
     }
 
     public int getId() {
@@ -65,8 +65,6 @@ public class Book {
     public void setStock(int stock) {
         this.stock = stock;
     }
-
-
 
     @Override
     public String toString() {
