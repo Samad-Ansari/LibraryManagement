@@ -1,0 +1,98 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop.xsd
+  http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context.xsd
+  http://www.springframework.org/schema/tx
+  http://www.springframework.org/schema/tx/spring-tx.xsd
+  http://www.springframework.org/schema/mvc
+  http://www.springframework.org/schema/mvc/spring-mvc.xsd
+  ">
+
+    <context:component-scan base-package="com.dam.library.controller" />
+
+    <tx:annotation-driven />
+    <mvc:annotation-driven />
+
+    <mvc:resources location="/WEB-INF/resources/" mapping="/resources/**" />
+
+    <!-- View Resolver -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- data source -->
+
+    <bean class="org.springframework.jdbc.datasource.SimpleDriverDataSource"  name="ds">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/usersdb" />
+        <property name="username" value="root" />
+        <property name="password" value="123" />
+
+    </bean>
+
+    <bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+            name="factory">
+
+        <!-- data source -->
+        <property name="dataSource" ref="ds" />
+
+        <!-- hibernate properties -->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+
+        <!-- annotated classes -->
+        <property name="annotatedClasses">
+            <list>
+                <value>com.dam.library.model.Book</value>
+                <value>com.dam.library.model.Student</value>
+            </list>
+        </property>
+
+    </bean>
+
+    <bean id="bookDao" class="com.dam.library.dao.BookDao">
+        <constructor-arg name="sessionFactory" ref="factory" />
+    </bean>
+
+    <bean id="bookService" class="com.dam.library.service.BookService">
+        <constructor-arg name="bookDao" ref="bookDao" />
+    </bean>
+
+    <bean id="bookController" class="com.dam.library.controller.BookController">
+        <constructor-arg name="bookService" ref="bookService" />
+    </bean>
+
+    <bean id="studentDao" class="com.dam.library.dao.StudentDao">
+        <constructor-arg name="sessionFactory" ref="factory" />
+    </bean>
+
+    <bean id="studentService" class="com.dam.library.service.StudentService">
+        <constructor-arg name="studentDao" ref="studentDao" />
+    </bean>
+
+    <bean id="studentController" class="com.dam.library.controller.StudentController">
+        <constructor-arg name="studentService" ref="studentService" />
+    </bean>
+
+    <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+            name="transactionManager">
+        <property name="sessionFactory" ref="factory"/>
+    </bean>
+
+
+
+
+</beans>
