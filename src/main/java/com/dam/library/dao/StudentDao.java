@@ -57,7 +57,8 @@ public class StudentDao {
         if(studentBook == null){
             return 1;
         }
-        studentBook.getBook().setStock(studentBook.getBook().getStock() + 1);
+        int inStock = studentBook.getBook().getStock();
+        studentBook.getBook().setStock(inStock + 1);
         studentBook.setReturn_date(date);
 
         return 0;
