@@ -19,31 +19,6 @@ public class StudentService {
     }
 
     @Transactional
-    public void addStudent(Student student){
-        this.studentDao.addStudent(student);
-    }
-
-    @Transactional
-    public void updateStudent(Student student){
-        this.studentDao.updateStudent(student);
-    }
-
-    @Transactional
-    public List<Student> listStudent(){
-        return this.studentDao.listStudent();
-    }
-
-    @Transactional
-    public Student getStudentById(int id){
-        return this.studentDao.getStudentById(id);
-    }
-
-    @Transactional
-    public void removeStudent(int id){
-        this.studentDao.removeStudent(id);
-    }
-
-    @Transactional
     public String issueBook(int studentId, int bookId, Date date){
         if(this.studentDao.issueBook(studentId, bookId, date) == 1){
             return "Book is out of stock !";

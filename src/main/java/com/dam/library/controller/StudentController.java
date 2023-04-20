@@ -30,51 +30,6 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-
-    @PostMapping
-    public ResponseEntity<?>  addStudent(@RequestBody Student student) throws IOException {
-        this.studentService.addStudent(student);
-        return new ResponseEntity<>("added successfullly", HttpStatus.OK);
-    }
-
-
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?>  updateStudent(@RequestBody Student student){
-        Student temp = this.studentService.getStudentById(student.getRoll());
-        if(temp == null){
-            return new ResponseEntity<>("student not exist", HttpStatus.OK);
-        }
-        if(student.getName() == null){
-            student.setName(temp.getName());
-        }
-        if(student.getPassword() == null){
-            student.setPassword(temp.getPassword());
-        }
-        this.studentService.updateStudent(student);
-        return new ResponseEntity<>("updated successfully", HttpStatus.OK);
-    }
-
-
-    @RequestMapping
-    public ResponseEntity<?>  getStudent() throws IOException {
-        List<Student> students = this.studentService.listStudent();
-        return new ResponseEntity<>(students, HttpStatus.OK);
-    }
-
-
-    @RequestMapping("/{roll}")
-    public ResponseEntity<?>  getStudentById(@PathVariable("roll") int rollno) throws IOException {
-        Student student = this.studentService.getStudentById(rollno);
-        return new ResponseEntity<>(student, HttpStatus.OK);
-    }
-
-
-    @RequestMapping(value = "/{roll}", method = RequestMethod.DELETE)
-    public ResponseEntity<?>  deleteStudent(@PathVariable(name = "roll") int roll) throws IOException {
-        this.studentService.removeStudent(roll);
-        return new ResponseEntity<>("deleted successfully", HttpStatus.OK);
-    }
-
     @PostMapping(value = "/{roll}")
     public ResponseEntity<?> issueBook(@PathVariable(name = "roll") int roll, @RequestParam(name = "bookId") int id, @RequestParam("date") @DateTimeFormat(pattern="dd-MM-yyyy") Date date){
         String message = this.studentService.issueBook(roll, id, date);

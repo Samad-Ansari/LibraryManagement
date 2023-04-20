@@ -6,12 +6,10 @@ import javax.persistence.*;
 @Table(name = "librarian")
 public class Librarian {
 	@Id
-	@GeneratedValue
-	private int id;
-	private String name;
-	@Column(unique = true, nullable = false)
 	private int empId;
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
+	private String name;
+	@Column(nullable = false)
 	private String password;
 
 	Librarian(){}
@@ -56,7 +54,7 @@ public class Librarian {
 
 	@Override
 	public String toString() {
-		return "Librarian [id = " + id + ", name = " + name + ", Librarian Id = " + empId
+		return "Librarian [name = " + name + ", Librarian Id = " + empId
 				+ "]";
 	}
 	

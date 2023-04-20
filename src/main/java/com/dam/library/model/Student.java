@@ -9,12 +9,16 @@ import java.util.List;
 public class Student {
     @Id
     private int roll;
+    @Column(nullable = false)
     private String name;
     @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "student")
     private List<StudentBook> studentBooks = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Account account;
 
     public List<StudentBook> getStudentBooks() {
         return studentBooks;
@@ -30,8 +34,17 @@ public class Student {
         this.roll = roll;
         this.name = name;
         this.password = password;
+        this.setAccount(null);
+        this.setStudentBooks(null);
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     public int getRoll() {
         return roll;

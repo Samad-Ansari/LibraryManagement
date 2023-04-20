@@ -2,26 +2,30 @@ package com.dam.library.model;
 
 import javax.persistence.*;
 
-@Entity()
+@Entity
 @Table(name = "account")
 public class Account {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
+    @Column(nullable = false)
     private int noBorrowedBook;
+    @Column(nullable = false)
     private int noReturnedBook;
-    private int noLostBook;
+    @Column(nullable = false)
     private int fineAmount;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "account")
     private Student student;
 
-    public Account(){}
+    public Account() {
+        this.noBorrowedBook = 0;
+        this.noReturnedBook = 0;
+        this.fineAmount = 0;
+    }
 
-    public Account(int noBorrowedBook, int noReturnedBook, int noLostBook) {
-        this.noBorrowedBook = noBorrowedBook;
-        this.noReturnedBook = noReturnedBook;
-        this.noLostBook = noLostBook;
+    public void addFine(long dayLate){
+        fineAmount += dayLate;
     }
 
     public int getFineAmount() {
@@ -53,7 +57,7 @@ public class Account {
     }
 
     public void setNoBorrowedBook(int noBorrowedBook) {
-        this.noBorrowedBook = noBorrowedBook;
+        this.noBorrowedBook += noBorrowedBook;
     }
 
     public int getNoReturnedBook() {
@@ -61,19 +65,7 @@ public class Account {
     }
 
     public void setNoReturnedBook(int noReturnedBook) {
-        this.noReturnedBook = noReturnedBook;
-    }
-
-    public int getNoLostBook() {
-        return noLostBook;
-    }
-
-    public void setNoLostBook(int noLostBook) {
-        this.noLostBook = noLostBook;
-    }
-
-    public void calculatefine(){
-        fineAmount = 100;
+        this.noReturnedBook += noReturnedBook;
     }
 
     @Override
@@ -82,7 +74,6 @@ public class Account {
                 "id = " + id +
                 ", noBorrowedBook = " + noBorrowedBook +
                 ", noReturnedBook = " + noReturnedBook +
-                ", noLostBook = " + noLostBook +
                 ", fineAmount = " + fineAmount +
                 " }";
     }

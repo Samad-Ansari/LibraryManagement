@@ -10,9 +10,13 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String author;
+    @Column(nullable = false)
     private int price;
+    @Column(nullable = false)
     private int stock;
 
     @OneToMany( mappedBy = "book")
@@ -28,6 +32,14 @@ public class Book {
 
     public int getId() {
         return id;
+    }
+
+    public void addStock(){
+        stock++;
+    }
+
+    public void minusStock(){
+        stock--;
     }
 
     public void setId(int id) {
