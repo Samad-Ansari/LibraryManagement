@@ -34,7 +34,7 @@
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
         <property name="url" value="jdbc:mysql://localhost:3306/usersdb" />
         <property name="username" value="root" />
-        <property name="password" value="123" />
+        <property name="password" value="123456" />
 
     </bean>
 
@@ -60,7 +60,6 @@
                 <value>com.dam.library.model.Student</value>
                 <value>com.dam.library.model.StudentBook</value>
                 <value>com.dam.library.model.Account</value>
-                <value>com.dam.library.model.Librarian</value>
             </list>
         </property>
 
@@ -88,19 +87,6 @@
 
     <bean id="studentController" class="com.dam.library.controller.StudentController">
         <constructor-arg name="studentService" ref="studentService" />
-    </bean>
-
-
-    <bean id="librarianDao" class="com.dam.library.dao.LibrarianDao">
-        <constructor-arg name="sessionFactory" ref="factory" />
-    </bean>
-
-    <bean id="librarianService" class="com.dam.library.service.LibrarianService">
-        <constructor-arg name="librarianDao" ref="librarianDao" />
-    </bean>
-
-    <bean id="librarianController" class="com.dam.library.controller.LibrarianController">
-        <constructor-arg name="librarianService" ref="librarianService" />
     </bean>
 
     <bean class="org.springframework.orm.hibernate5.HibernateTransactionManager"

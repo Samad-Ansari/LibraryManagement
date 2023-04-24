@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -21,52 +21,70 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @RequestMapping
+    @RequestMapping(value = "/all")
     public ResponseEntity<?> listBooks(){
-        System.out.println("List of Book");
         List<Book> bookList = this.bookService.listBooks();
+        if(bookList == null){
+            return new ResponseEntity<>("Book not exist", HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(bookList, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?>  addBook(@RequestBody Book book){
-        this.bookService.addBook(book);
-        return new ResponseEntity<>("added successfully", HttpStatus.OK);
+        String message = this.bookService.addBook(book);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?>  updateBook(@RequestBody Book book){
-        Book temp = this.bookService.getBookById(book.getId());
+    @RequestMapping(value="/{bookId}", method = RequestMethod.PUT)
+    public ResponseEntity<?>  updateBook(@PathVariable("bookId") int bookId, @RequestBody Book book){
+        Book temp = this.bookService.getBookById(bookId);
         if(temp == null){
-            return new ResponseEntity<>("book not exist", HttpStatus.OK);
+            return new ResponseEntity<>("book not exist", HttpStatus.NOT_FOUND);
         }
-        if(book.getStock() == 0){
-            book.setStock(temp.getStock());
+        if(book.getStock() != 0){
+            temp.setStock(book.getStock());
         }
-        if(book.getPrice() == 0){
-            book.setStock(temp.getPrice());
+        if(book.getPrice() != 0){
+            temp.setPrice(book.getPrice());
         }
-        if(book.getAuthor() == null){
-            book.setAuthor(temp.getAuthor());
+        if(book.getAuthor() != null){
+            temp.setAuthor(book.getAuthor());
         }
-        if(book.getTitle() == null){
-            book.setTitle(temp.getTitle());
+        if(book.getTitle() != null){
+            temp.setTitle(book.getTitle());
         }
-        this.bookService.updateBook(book);
-        return new ResponseEntity<>("updated successfully", HttpStatus.OK);
+        temp.setId(bookId);
+        String message = this.bookService.updateBook(temp);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 
-    @RequestMapping("/{bookId}")
-    public ResponseEntity<?> getBookById(@PathVariable(name = "bookId") int id){
+    @RequestMapping
+    public ResponseEntity<?> getBookById(@RequestParam(name = "bookId") int id){
         Book book = this.bookService.getBookById(id);
+        if(book == null){
+            return new ResponseEntity<>("Book not exist", HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{bookId}", method = RequestMethod.DELETE)
     public ResponseEntity<?>  deleteBook(@PathVariable(name = "bookId") int id){
-        this.bookService.removeBook(id);
-        return new ResponseEntity<>("deleted successfully", HttpStatus.OK);
+        String message = this.bookService.removeBook(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<?> pageNotFound() {
+        return new ResponseEntity<>("Page Not Found", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/*")
+    public ResponseEntity<?> handle() {
+        return new ResponseEntity<>("Invalid URL", HttpStatus.BAD_REQUEST);
+    }
+
 }
