@@ -1,11 +1,17 @@
 package com.dam.library.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "book")
+@JsonIgnoreProperties(
+        value = {"studentBooks"},
+        allowGetters = false
+)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,6 +91,7 @@ public class Book {
                 ", title = '" + title + '\'' +
                 ", author = '" + author + '\'' +
                 ", price = " + price +
+                ", stock = " + stock +
                 " }";
     }
 }

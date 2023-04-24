@@ -21,6 +21,45 @@ public class StudentDao {
         sessionFactory = factory;
     }
 
+    // account created repeatedly
+    public void addStudent(Student student){
+        Session session = this.sessionFactory.getCurrentSession();
+        Account account = new Account();
+        session.persist(account);
+        student.setAccount(account);
+        session.persist(student);
+        System.out.println("Student saved successfully");
+    }
+
+
+    public void updateStudent(Student student){
+        Session session = this.sessionFactory.getCurrentSession();
+        session.update(student);
+        System.out.println("Student updated successfully");
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Student> listStudent(){
+        Session session = this.sessionFactory.getCurrentSession();
+        List<Student> studentList = (List<Student>) session.createQuery("from Student").list();
+        return studentList;
+    }
+
+    public Student getStudentById(int id){
+        Session session = this.sessionFactory.getCurrentSession();
+        Student student = session.get(Student.class, id);
+        return student;
+    }
+
+    public void removeStudent(int id){
+        Session session = this.sessionFactory.getCurrentSession();
+        Student student = session.load(Student.class, id);
+        if(student != null){
+            session.delete(student);
+            System.out.println("Student deleted successfully");
+        }
+    }
+
     public int issueBook(int studentId, int bookId, Date date){
         Session session = this.sessionFactory.getCurrentSession();
         Student student = session.get(Student.class, studentId);

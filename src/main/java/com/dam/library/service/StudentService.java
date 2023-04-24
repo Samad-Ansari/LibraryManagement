@@ -19,6 +19,37 @@ public class StudentService {
     }
 
     @Transactional
+    public String addStudent(Student student){
+        Student student1 = this.studentDao.getStudentById(student.getRoll());
+        if(student1 != null){
+            return "Student with Roll Number " + student1.getRoll() + " Already Exist";
+        }
+        this.studentDao.addStudent(student);
+        return "Student Added Successfully";
+    }
+
+    @Transactional
+    public void updateStudent(Student student){
+        this.studentDao.updateStudent(student);
+    }
+
+    @Transactional
+    public List<Student> listStudent(){
+        return this.studentDao.listStudent();
+    }
+
+    @Transactional
+    public Student getStudentById(int id){
+        Student student =  this.studentDao.getStudentById(id);
+        return student;
+    }
+
+    @Transactional
+    public void removeStudent(int id){
+        this.studentDao.removeStudent(id);
+    }
+
+    @Transactional
     public String issueBook(int studentId, int bookId, Date date){
         if(this.studentDao.issueBook(studentId, bookId, date) == 1){
             return "Book is out of stock !";

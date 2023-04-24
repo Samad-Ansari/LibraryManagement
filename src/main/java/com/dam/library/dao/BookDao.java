@@ -20,13 +20,11 @@ public class BookDao {
     public void addBook(Book book){
         Session session = this.sessionFactory.getCurrentSession();
         session.persist(book);
-        System.out.println("Book saved successfully = " + book);
     }
 
     public void updateBook(Book book){
         Session session = this.sessionFactory.getCurrentSession();
         session.update(book);
-        System.out.println("Book updated successfully = " + book);
     }
 
     @SuppressWarnings("unchecked")
@@ -38,7 +36,6 @@ public class BookDao {
     public Book getBookById(int id){
         Session session = this.sessionFactory.getCurrentSession();
         Book book = session.get(Book.class, id);
-        System.out.println("Book loaded successfully");
         return book;
     }
 
@@ -48,7 +45,6 @@ public class BookDao {
         if(null != book){
             session.delete(book);
         }
-        System.out.println("Book deleted successfully = " + book);
     }
 
 }
